@@ -1,0 +1,13 @@
+#Question 4
+# company size and average salary
+avg_salary_by_size <- aggregate(salary_in_usd ~ company_size, data = salary, FUN = mean)
+
+# Plot the results with data labels
+ggplot(avg_salary_by_size, aes(x = company_size, y = salary_in_usd)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(label = paste("$", round(salary_in_usd, 2))), vjust = -0.5, size = 3, color = "black") + 
+  labs(x = "Company Size", y = "Average Salary (USD)", title = "Average Salary by Company Size") 
+
+
+
+

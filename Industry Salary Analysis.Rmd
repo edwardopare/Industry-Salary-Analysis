@@ -1,0 +1,182 @@
+---
+title: "Industry Salary Analysis"
+author: "Edward Opare - Yeboah"
+date: "2024-05-18"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# **Overview**
+
+## **Introduction**
+This project aimed to analyze salary data in the tech industry to uncover insights related to various factors such as job titles, work experience, remote work ratios, company size, and employment types. By examining these factors, the project sought to provide a deeper understanding of salary trends and inform decision-making for job seekers, employers, and industry analysts.
+
+## **Goals**
+The primary goal of the analysis were to:
+
+* Identify the average salary for top 10 different job titles.
+* Examine the correlation between years of work experience and salary.
+* Determine the job title with the highest remote work ratio.
+* Analyze how company size affects salary levels.
+* Compare salary differences between various employment types.
+
+## **Methodology**
+The following actions were taken to accomplish these goals:
+
+#### **Data Loading and Preparation:**
+
+* Loaded the dataset and inspected its structure.
+* Cleaned the data to ensure it was ready for analysis.
+
+#### **Analysis for Each Question:**
+
+* Calculated and plotted the average salary for the top 10 job titles.
+* Plotted a scatter plot of work experience against salary and calculated the correlation coefficient.
+* Aggregated data by job title to find the job title with the highest remote work ratio.
+* Aggregated data by company size to determine the average salary and plotted the results.
+* Compared average salaries between different employment types and visualized the differences.
+
+## **Key Insights**
+
+#### **Average Salary by Job Title:**
+Certain job titles, such as "AI Engineer" and "Machine Learning Engineer," consistently show higher average salaries.
+
+#### **Correlation Between Work Experience and Salary:**
+The correlation coefficient of approximately 0.078 indicates a very weak positive relationship between years of work experience and salary. This suggests that years of work experience alone may not be a strong predictor of salary.
+
+#### **Job Title with the Highest Remote Work Ratio:**
+"AWS Data Architect" has the highest remote work ratio at 100%, indicating that this role is fully remote.
+
+#### **Average Salary by Company Size:**
+The average wage offered by larger organizations is typically higher than that of smaller companies, revealing that the size of the company may have an impact on salary levels.
+
+#### **Salary Differences Between Employment Types:**
+There are noticeable differences in average salaries between full-time, part-time, and contract positions, with full-time roles generally offering higher salaries.
+
+## **Recommendation**
+* Consider the impact of company size on salary structures, and seek to recruit top people by offering competitive wages regardless of company size.
+* Recognise the value of offering competitive pay, particularly for professions that are completely remote or in high demand.
+* Support initiatives that provide skill development and training for emerging and high-paying job titles in the tech industry.
+
+## **Conclusion**
+This report sheds light on salary trends in the IT business by highlighting important factors that influence salary levels. Understanding these trends enables stakeholders to make more informed decisions when negotiating salary, employing personnel, or implementing employee regulations.
+
+
+```{r loading packages, include=FALSE}
+install.packages("tidyverse")
+library(tidyverse)
+
+```
+
+## Average Salary by Job Title
+
+This visualization displays the top 10 job titles by average salary, providing insights into the salary distribution across different job roles.
+
+```{r avg_salary, echo=FALSE}
+#loading the dataset
+salary <-read.csv("salaries.csv")
+
+# finding the average salary of each job title
+avg_salary <- aggregate(salary_in_usd ~ job_title, data = salary, FUN = mean)
+
+#average salary in descending order
+top_10 <- head(avg_salary,10)
+
+#visuals of the average salary per job title
+ggplot(top_10, aes(x=reorder(job_title, -salary_in_usd), y=salary_in_usd))+
+  geom_bar(stat = "identity",fill = "skyblue")+
+  geom_text(aes(label = paste("$", round(salary_in_usd,0))), vjust = -0.5, size = 1, color = "black")+
+  labs(x = "Job Title", y ="Average Salary (USD)", title = "Average Salary by Job Title")
+  
+
+
+
+```
+
+## Correlation Between Years of Work Experience and Salary
+
+To investigate the correlation between years of work experience and salary, I will create a scatter plot to visually represent the data and calculate the correlation coefficient to measure the strength of the relationship between the variables.
+
+The correlation coefficient of approximately 0.078 indicates a very weak positive relationship between years of work experience and salary. This implies that the relationship between the two variables is weak, indicating that years of work experience alone may not be a reliable indicator of salary.
+
+```{r question2, echo=FALSE}
+# Plot scatter plot
+ggplot(salary, aes(x = work_year, y = salary_in_usd)) +
+  geom_point() +
+  labs(x = "Years of Work Experience", y = "Salary (USD)", title = "Relationship Between Work Experience and Salary")
+
+# Calculate correlation coefficient
+correlation <- cor(salary$work_year, salary$salary_in_usd)
+print(paste("Correlation Coefficient:", correlation))
+```
+
+## Job Title with the Highest Remote Work Ratio
+
+To identify the job title with the highest remote work ratio, I aggregated the data by job title and calculated the mean remote work ratio for each title.
+
+After conducting a thorough analysis, the job title with the highest remote work ratio is "AWS Data Architect" with a remote work ratio of 1.0 (100%). This indicates that, in comparison to other job titles, employees with this title work remotely the most frequently.
+
+
+```{r question3, echo=FALSE}
+# Aggregate data by job title and calculate mean remote work ratio
+remote_ratio <- aggregate(remote_ratio ~ job_title, data = salary, FUN = mean)
+
+# job title with the highest remote work ratio
+highest_remote_ratio <- remote_ratio[which.max(remote_ratio$remote_ratio), ]
+print(highest_remote_ratio)
+```
+
+## Average Salary by Company Size
+
+* L - Large
+* M - Medium
+* S - Small
+
+Based on the analysis made, I observed the following trends in average salary by company size:
+
+Middle-sized companies (51-500 employees) tend to offer the highest average salaries.
+Large companies (501+ employees) come next in terms of average salary levels.
+Small companies (1-50 employees) offer the lowest average salaries among the three categories.
+
+This trend indicates that while large companies have more resources, middle-sized companies might be offering higher salaries to attract and retain talent in a competitive market.
+
+```{r question4, echo=FALSE}
+#Question 4
+# company size and average salary
+avg_salary_by_size <- aggregate(salary_in_usd ~ company_size, data = salary, FUN = mean)
+
+# Plot the results with data labels
+ggplot(avg_salary_by_size, aes(x = company_size, y = salary_in_usd)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_text(aes(label = paste("$", round(salary_in_usd, 2))), vjust = -0.5, size = 3, color = "black") + 
+  labs(x = "Company Size", y = "Average Salary (USD)", title = "Average Salary by Company Size") 
+
+```
+
+
+## Difference in Salary Between Employment Types
+
+
+To compare the average salaries between different employment types, I calculated the average salary for each employment type and visualized the results. The employment types in the dataset are:
+
+ * FT:Full-time
+ * CT:Contract
+ * PT:Part-time
+ * FL:Freelance
+
+This implies that contract jobs are the most lucrative in terms of pay, behind full-time employment.Part-time and freelance roles tend to offer lower salaries, which might reflect the varying levels of job security, benefits, and responsibilities associated with these employment types. 
+
+```{r question5, echo=FALSE}
+#Question 5
+# Group data by employment type and calculate average salary
+avg_salary_by_employment <- aggregate(salary_in_usd ~ employment_type, data = salary, FUN = mean)
+
+# Visualization
+ggplot(avg_salary_by_employment, aes(x = employment_type, y = salary_in_usd, fill = employment_type)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = paste("$", round(salary_in_usd, 2))), vjust = -0.5, size = 3, color = "black") + 
+  labs(x = "Employment Type", y = "Average Salary (USD)", title = "Average Salary by Employment Type") 

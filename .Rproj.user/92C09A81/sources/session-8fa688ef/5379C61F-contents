@@ -1,0 +1,24 @@
+#Question 1.
+
+install.packages("tidyverse")
+library(tidyverse)
+
+#loading the dataset
+salary <-read.csv("salaries.csv")
+
+# finding the average salary of each job title
+avg_salary <- aggregate(salary_in_usd ~ job_title, data = salary, FUN = mean)
+View(avg_salary)
+
+#average salary in descending order
+top_10 <- head(avg_salary,10)
+View(top_10)
+
+#visuals of the average salary per job title
+ggplot(top_10, aes(x=reorder(job_title, -salary_in_usd), y=salary_in_usd))+
+  geom_bar(stat = "identity",fill = "skyblue")+
+  geom_text(aes(label = paste("$", round(salary_in_usd,0))), vjust = -0.5, size = 1, color = "black")+
+  labs(x = "Job Title", y ="Average Salary (USD)", title = "Average Salary by Job Title")
+  
+
+  
