@@ -1,6 +1,6 @@
 # Industry-Salary-Analysis
 
-This project aimed to analyze salary data in the tech industry to uncover insights related to various factors such as job titles, work experience, remote work ratios, company size, and employment types. By examining these factors, the project sought to provide a deeper understanding of salary trends and inform decision-making for job seekers, and employers.
+This project aimed to analyze salary data in the tech industry to uncover insights related to various factors such as job titles, work experience, remote work ratios, company size, and employment types. By examining these factors, the project sought to provide a deeper understanding of salary trends and inform decision-making for job seekers and employers.
 
 # The primary goal of the analysis was to:
 
